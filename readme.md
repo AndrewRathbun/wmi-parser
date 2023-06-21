@@ -2,7 +2,7 @@
 
 ## TLDR
 
-There is nothing new here! It is just a rewrite of @DavidPany excellent work into WMI parsing. The original pythin code can be found here:
+There is nothing new here! It is just a rewrite of @DavidPany excellent work into WMI parsing. The original Python code can be found here:
 
 https://github.com/davidpany/WMI_Forensics
 
