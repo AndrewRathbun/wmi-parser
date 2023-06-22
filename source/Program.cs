@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -172,35 +173,37 @@ namespace wmi
         /// <returns></returns>
         private static bool CheckCommandLine()
         {
-            FileAttributes fa = File.GetAttributes(fclp.Object.Input);
-            if ((fa & FileAttributes.Directory) == FileAttributes.Directory)
+            if (Directory.Exists(fclp.Object.Input))
             {
-                if (Directory.Exists(fclp.Object.Input) == false)
+                var dirInfo = new DirectoryInfo(fclp.Object.Input);
+                if (!dirInfo.EnumerateFiles().Any())
                 {
-                    Console.WriteLine("Input directory (-i) does not exist");
+                    Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Input directory (-i) is empty.");
                     return false;
                 }
             }
+            else if (File.Exists(fclp.Object.Input))
+            {
+                // nothing to do, file exists
+            }
             else
             {
-                if (File.Exists(fclp.Object.Input) == false)
-                {
-                    Console.WriteLine("Input file (-i) does not exist");
-                    return false;
-                }
+                Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Input (-i) does not exist.");
+                return false;
             }
 
             if (fclp.Object.Output != null)
             {
-                if (Directory.Exists(fclp.Object.Output) == false)
+                if (!Directory.Exists(fclp.Object.Output))
                 {
-                    Console.WriteLine("Output directory (-o) does not exist");
-                    return false;
+                    Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Output directory (-o) does not exist, creating it...");
+                    Directory.CreateDirectory(fclp.Object.Output);
                 }
-            }            
+            }
 
             return true;
         }
+
 
         /// <summary>
         /// 
