@@ -2,6 +2,7 @@
 using Fclp;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -27,25 +28,40 @@ namespace wmi
         /// Application entry point
         /// </summary>
         /// <param name="args"></param>
+        // Define constants
+        const string EventConsumerPattern = @"([\w_]*EventConsumer)\.Name=""([\w\s]*)""";
+        const string EventFilterPattern = @"_EventFilter\.Name=""([\w\s]*)""";
+        const string CommandLineEventConsumerPattern = @"\x00CommandLineEventConsumer\x00\x00(.*?)\x00.*?{0}\x00\x00?([^\x00]*)?";
+        const string EventConsumerPatternWithGroupName = @"(\w*EventConsumer)(.*?)({0})(\x00\x00)([^\x00]*)(\x00\x00)([^\x00]*)";
+        const string EventConsumerPatternWithFilter = @"({0})(\x00\x00)([^\x00]*)(\x00\x00)";
+
         static void Main(string[] args)
         {
-            if (ProcessCommandLine(args) == false)
+            if (!ProcessCommandLine(args))
             {
                 return;
             }
 
-            if (CheckCommandLine() == false)
+            if (!CheckCommandLine())
             {
                 return;
             }
 
-            string data = File.ReadAllText(fclp.Object.Input);
+            var fileInfo = new FileInfo(fclp.Object.Input);
+            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Parsing file: {fileInfo.Name}");
+            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | File size: {fileInfo.Length / 1024.0 / 1024.0:F2} MB");
 
-            Regex regexConsumer = new Regex(@"([\w_]*EventConsumer)\.Name=""([\w\s]*)""", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
+            string data = File.ReadAllText(fileInfo.FullName);
+
+            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Searching for pattern: {EventConsumerPattern}");
+            Regex regexConsumer = new Regex(EventConsumerPattern, RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
             var matchesConsumer = regexConsumer.Matches(data);
+            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Found {matchesConsumer.Count} matches for pattern: {EventConsumerPattern}");
 
-            Regex regexFilter = new Regex(@"_EventFilter\.Name=""([\w\s]*)""", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
+            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Searching for pattern: {EventFilterPattern}");
+            Regex regexFilter = new Regex(EventFilterPattern, RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
             var matchesFilter = regexFilter.Matches(data);
+            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Found {matchesFilter.Count} matches for pattern: {EventFilterPattern}");
 
             List<Binding> bindings = new List<Binding>();
             for (int index = 0; index < matchesConsumer.Count; index++)
@@ -55,24 +71,35 @@ namespace wmi
 
             foreach (var b in bindings)
             {
-                Regex regexEventConsumer = new Regex(@"\x00CommandLineEventConsumer\x00\x00(.*?)\x00.*?" + b.Name + "\x00\x00?([^\x00]*)?", RegexOptions.Multiline);
-
+                var cmdLineEventConsPattern = string.Format(CommandLineEventConsumerPattern, b.Name);
+                Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Searching for pattern: {cmdLineEventConsPattern}");
+                Regex regexEventConsumer = new Regex(cmdLineEventConsPattern, RegexOptions.Multiline);
                 var matches = regexEventConsumer.Matches(data);
+                Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Found {matches.Count} matches for pattern: {cmdLineEventConsPattern}");
+
                 foreach (Match m in matches)
                 {
                     b.Type = "CommandLineEventConsumer";
                     b.Arguments = m.Groups[1].Value;
                 }
 
-                regexEventConsumer = new Regex(@"(\w*EventConsumer)(.*?)(" + b.Name + @")(\x00\x00)([^\x00]*)(\x00\x00)([^\x00]*)", RegexOptions.Multiline);
+                var eventConsGroupPattern = string.Format(EventConsumerPatternWithGroupName, b.Name);
+                Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Searching for pattern: {eventConsGroupPattern}");
+                regexEventConsumer = new Regex(eventConsGroupPattern, RegexOptions.Multiline);
                 matches = regexEventConsumer.Matches(data);
+                Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Found {matches.Count} matches for pattern: {eventConsGroupPattern}");
+
                 foreach (Match m in matches)
                 {
-                    b.Other = string.Format("{0} ~ {1} ~ {2} ~ {3}", m.Groups[1], m.Groups[3], m.Groups[5], m.Groups[7]);
+                    b.Other = $"{m.Groups[1]} ~ {m.Groups[3]} ~ {m.Groups[5]} ~ {m.Groups[7]}";
                 }
 
-                regexEventConsumer = new Regex(@"(" + b.Filter + ")(\x00\x00)([^\x00]*)(\x00\x00)", RegexOptions.Multiline);
+                var eventConsFilterPattern = string.Format(EventConsumerPatternWithFilter, b.Filter);
+                Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Searching for pattern: {eventConsFilterPattern}");
+                regexEventConsumer = new Regex(eventConsFilterPattern, RegexOptions.Multiline);
                 matches = regexEventConsumer.Matches(data);
+                Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Found {matches.Count} matches for pattern: {eventConsFilterPattern}");
+
                 foreach (Match m in matches)
                 {
                     b.Query = m.Groups[3].Value;
@@ -109,7 +136,9 @@ namespace wmi
             var header =
                $"\r\n{Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}" +
                "\r\n\r\nAuthor: Mark Woan / woanware (markwoan@gmail.com)" +
-               "\r\nhttps://github.com/woanware/wmi-parser";
+               "\r\nhttps://github.com/woanware/wmi-parser" +
+               "\r\n\r\nUpdated By: Andrew Rathbun / https://github.com/AndrewRathbun" +
+               "\r\nhttps://github.com/AndrewRathbun/wmi-parser";
 
             // Sets up the parser to execute the callback when -? or --help is supplied
             fclp.SetupHelp("?", "help")
@@ -184,7 +213,7 @@ namespace wmi
             {
                 if ((b.Name.Contains("BVTConsumer") && b.Filter.Contains("BVTFilter")) || (b.Name.Contains("SCM Event Log Consumer") && b.Filter.Contains("SCM Event Log Filter")))
                 {
-                    Console.WriteLine("  {0}-{1} - (Common binding based on consumer and filter names,  possibly legitimate)", b.Name, b.Filter);
+                    Console.WriteLine("  {0}-{1} - (Common binding based on consumer and filter names, possibly legitimate)", b.Name, b.Filter);
                 }
                 else
                 {
@@ -215,27 +244,31 @@ namespace wmi
         /// <param name="bindings"></param>
         private static void OutputToFile(List<Binding> bindings)
         {
-            using (FileStream fileStream = new FileStream(Path.Combine(fclp.Object.Output, "wmi-parser.tsv"), FileMode.Create, FileAccess.Write))
-            using (StreamWriter streamWriter = new StreamWriter(fileStream))
-            using (CsvWriter cw = new CsvHelper.CsvWriter(streamWriter))
+            using (var writer = new StreamWriter(Path.Combine(fclp.Object.Output, "wmi-parser.tsv")))
             {
-                cw.Configuration.Delimiter = "\t";
-                // Write out the file headers
-                cw.WriteField("Name");
-                cw.WriteField("Type");
-                cw.WriteField("Arguments");
-                cw.WriteField("Filter Name");
-                cw.WriteField("Filter Query");
-                cw.NextRecord();
-
-                foreach (var b in bindings)
+                var config = new CsvHelper.Configuration.CsvConfiguration(CultureInfo.InvariantCulture)
                 {
-                    cw.WriteField(b.Name);
-                    cw.WriteField(b.Type);
-                    cw.WriteField(b.Arguments);
-                    cw.WriteField(b.Filter);
-                    cw.WriteField(b.Query);
-                    cw.NextRecord(); ;
+                    Delimiter = "\t",
+                };
+                using (var csv = new CsvWriter(writer, config))
+                {
+                    // Write out the file headers
+                    csv.WriteField("Name");
+                    csv.WriteField("Type");
+                    csv.WriteField("Arguments");
+                    csv.WriteField("Filter Name");
+                    csv.WriteField("Filter Query");
+                    csv.NextRecord();
+
+                    foreach (var b in bindings)
+                    {
+                        csv.WriteField(b.Name);
+                        csv.WriteField(b.Type);
+                        csv.WriteField(b.Arguments);
+                        csv.WriteField(b.Filter);
+                        csv.WriteField(b.Query);
+                        csv.NextRecord();
+                    }
                 }
             }
         }
