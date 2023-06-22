@@ -1,23 +1,20 @@
-# wmi-parser
+# WMI-Parser
 
 ## TLDR
 
-There is nothing new here! It is just a rewrite of @DavidPany excellent work into WMI parsing. The original Python code can be found here:
+This is an updated version of woanware's WMI-Parser, which can be found [here](https://github.com/woanware/wmi-parser). That tool was a C# rewrite of davidpany's WMI_Forensics Python script, found [here](https://github.com/davidpany/WMI_Forensics)
 
-https://github.com/davidpany/WMI_Forensics
-
-## Background
-
-I need WMI parsing for autorunner, so converted the original python code to C#, and thought it might as well be available as a standalone tool. The only added feature is CSV export
-
-## Example
+## Usage
 ```
-.\wmi-parser.exe -i .\OBJECTS.DATA
+.\wmi-parser.exe -i C:\temp\testdata\OBJECTS.DATA -o c:\temp\testdata
 
-wmi-parser v0.0.1
+wmi-parser v0.0.3
 
 Author: Mark Woan / woanware (markwoan@gmail.com)
 https://github.com/woanware/wmi-parser
+
+Updated By: Andrew Rathbun / https://github.com/AndrewRathbun
+https://github.com/AndrewRathbun/wmi-parser
 
   SCM Event Log Consumer-SCM Event Log Filter - (Common binding based on consumer and filter names,  possibly legitimate)
     Consumer: NTEventLogEventConsumer ~ SCM Event Log Consumer ~ sid ~ Service Control Manager
@@ -36,3 +33,8 @@ https://github.com/woanware/wmi-parser
       Filter Name : DeviceDocked
       Filter Query: SELECT * FROM Win32_SystemConfigurationChangeEvent 
 ```
+
+## Output
+
+This will output to TSV, which can ingested into a tool like Timeline Explorer for easy analysis.
+
