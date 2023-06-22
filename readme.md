@@ -2,7 +2,7 @@
 
 ## TLDR
 
-This is an updated version of woanware's WMI-Parser, which can be found [here](https://github.com/woanware/wmi-parser). That tool was a C# rewrite of davidpany's WMI_Forensics Python script, found [here\(https://github.com/davidpany/WMI_Forensics)
+This is an updated version of woanware's WMI-Parser, which can be found [here](https://github.com/woanware/wmi-parser). That tool was a C# rewrite of davidpany's WMI_Forensics Python script, found [here](https://github.com/davidpany/WMI_Forensics)
 
 ## Usage
 ```
