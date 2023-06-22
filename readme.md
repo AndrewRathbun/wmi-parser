@@ -6,12 +6,15 @@ This is an updated version of woanware's WMI-Parser, which can be found [here](h
 
 ## Usage
 ```
-.\wmi-parser.exe -i .\OBJECTS.DATA
+.\wmi-parser.exe -i C:\temp\testdata\OBJECTS.DATA -o c:\temp\testdata
 
-wmi-parser v0.0.1
+wmi-parser v0.0.3
 
 Author: Mark Woan / woanware (markwoan@gmail.com)
 https://github.com/woanware/wmi-parser
+
+Updated By: Andrew Rathbun / https://github.com/AndrewRathbun
+https://github.com/AndrewRathbun/wmi-parser
 
   SCM Event Log Consumer-SCM Event Log Filter - (Common binding based on consumer and filter names,  possibly legitimate)
     Consumer: NTEventLogEventConsumer ~ SCM Event Log Consumer ~ sid ~ Service Control Manager
