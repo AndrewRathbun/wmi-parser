@@ -38,31 +38,19 @@ namespace wmi
 
         static void Main(string[] args)
         {
-            if (!ProcessCommandLine(args))
-            {
-                return;
-            }
-
-            if (!CheckCommandLine())
+            if (!ProcessCommandLine(args) || !CheckCommandLine())
             {
                 return;
             }
 
             var fileInfo = new FileInfo(fclp.Object.Input);
-            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Parsing file: {fileInfo.Name}");
-            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | File size: {fileInfo.Length / 1024.0 / 1024.0:F2} MB");
+            LogMessage($"Parsing file: {fileInfo.Name}");
+            LogMessage($"File size: {fileInfo.Length / 1024.0 / 1024.0:F2} MB");
 
             string data = File.ReadAllText(fileInfo.FullName);
 
-            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Searching for pattern: {EventConsumerPattern}");
-            Regex regexConsumer = new Regex(EventConsumerPattern, RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
-            var matchesConsumer = regexConsumer.Matches(data);
-            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Found {matchesConsumer.Count} matches for pattern: {EventConsumerPattern}");
-
-            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Searching for pattern: {EventFilterPattern}");
-            Regex regexFilter = new Regex(EventFilterPattern, RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
-            var matchesFilter = regexFilter.Matches(data);
-            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Found {matchesFilter.Count} matches for pattern: {EventFilterPattern}");
+            var matchesConsumer = FindPatternMatches(data, EventConsumerPattern);
+            var matchesFilter = FindPatternMatches(data, EventFilterPattern);
 
             List<Binding> bindings = new List<Binding>();
             for (int index = 0; index < matchesConsumer.Count; index++)
@@ -72,35 +60,20 @@ namespace wmi
 
             foreach (var b in bindings)
             {
-                var cmdLineEventConsPattern = string.Format(CommandLineEventConsumerPattern, b.Name);
-                Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Searching for pattern: {cmdLineEventConsPattern}");
-                Regex regexEventConsumer = new Regex(cmdLineEventConsPattern, RegexOptions.Multiline);
-                var matches = regexEventConsumer.Matches(data);
-                Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Found {matches.Count} matches for pattern: {cmdLineEventConsPattern}");
-
+                var matches = FindPatternMatches(data, string.Format(CommandLineEventConsumerPattern, b.Name));
                 foreach (Match m in matches)
                 {
                     b.Type = "CommandLineEventConsumer";
                     b.Arguments = m.Groups[1].Value;
                 }
 
-                var eventConsGroupPattern = string.Format(EventConsumerPatternWithGroupName, b.Name);
-                Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Searching for pattern: {eventConsGroupPattern}");
-                regexEventConsumer = new Regex(eventConsGroupPattern, RegexOptions.Multiline);
-                matches = regexEventConsumer.Matches(data);
-                Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Found {matches.Count} matches for pattern: {eventConsGroupPattern}");
-
+                matches = FindPatternMatches(data, string.Format(EventConsumerPatternWithGroupName, b.Name));
                 foreach (Match m in matches)
                 {
                     b.Other = $"{m.Groups[1]} ~ {m.Groups[3]} ~ {m.Groups[5]} ~ {m.Groups[7]}";
                 }
 
-                var eventConsFilterPattern = string.Format(EventConsumerPatternWithFilter, b.Filter);
-                Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Searching for pattern: {eventConsFilterPattern}");
-                regexEventConsumer = new Regex(eventConsFilterPattern, RegexOptions.Multiline);
-                matches = regexEventConsumer.Matches(data);
-                Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | Found {matches.Count} matches for pattern: {eventConsFilterPattern}");
-
+                matches = FindPatternMatches(data, string.Format(EventConsumerPatternWithFilter, b.Filter));
                 foreach (Match m in matches)
                 {
                     b.Query = m.Groups[3].Value;
@@ -113,6 +86,20 @@ namespace wmi
             {
                 OutputToFile(bindings);
             }
+        }
+
+        private static MatchCollection FindPatternMatches(string data, string pattern)
+        {
+            LogMessage($"Searching for pattern: {pattern}");
+            var regex = new Regex(pattern, RegexOptions.Multiline);
+            var matches = regex.Matches(data);
+            LogMessage($"Found {matches.Count} matches for pattern: {pattern}");
+            return matches;
+        }
+
+        private static void LogMessage(string message)
+        {
+            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fffffff} | {message}");
         }
 
         /// <summary>
@@ -203,7 +190,6 @@ namespace wmi
 
             return true;
         }
-
 
         /// <summary>
         /// 
