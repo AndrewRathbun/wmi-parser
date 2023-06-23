@@ -75,3 +75,17 @@ jobs:
       uses: github/codeql-action/analyze@v2
       with:
         category: "/language:${{matrix.language}}"
+
+    - name: Create results directory
+      run: mkdir -p ./results
+
+    - name: Copy SARIF file to results directory
+      run: cp results/codeql-database/codeql.sarif ./results/csharp.sarif
+
+    - name: Commit and push results to repository
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add ./results
+        git commit -m "Add CodeQL analysis results"
+        git push
