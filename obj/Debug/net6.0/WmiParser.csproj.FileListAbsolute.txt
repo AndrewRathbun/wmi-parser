@@ -1,0 +1,17 @@
+D:\WmiParserNet6\WmiParser\bin\Debug\net6.0\WmiParser.exe
+D:\WmiParserNet6\WmiParser\bin\Debug\net6.0\WmiParser.deps.json
+D:\WmiParserNet6\WmiParser\bin\Debug\net6.0\WmiParser.runtimeconfig.json
+D:\WmiParserNet6\WmiParser\bin\Debug\net6.0\WmiParser.dll
+D:\WmiParserNet6\WmiParser\bin\Debug\net6.0\WmiParser.pdb
+D:\WmiParserNet6\WmiParser\obj\Debug\net6.0\WmiParser.csproj.AssemblyReference.cache
+D:\WmiParserNet6\WmiParser\obj\Debug\net6.0\WmiParser.GeneratedMSBuildEditorConfig.editorconfig
+D:\WmiParserNet6\WmiParser\obj\Debug\net6.0\WmiParser.AssemblyInfoInputs.cache
+D:\WmiParserNet6\WmiParser\obj\Debug\net6.0\WmiParser.AssemblyInfo.cs
+D:\WmiParserNet6\WmiParser\obj\Debug\net6.0\WmiParser.csproj.CoreCompileInputs.cache
+D:\WmiParserNet6\WmiParser\obj\Debug\net6.0\WmiParser.dll
+D:\WmiParserNet6\WmiParser\obj\Debug\net6.0\refint\WmiParser.dll
+D:\WmiParserNet6\WmiParser\obj\Debug\net6.0\WmiParser.pdb
+D:\WmiParserNet6\WmiParser\obj\Debug\net6.0\WmiParser.genruntimeconfig.cache
+D:\WmiParserNet6\WmiParser\obj\Debug\net6.0\ref\WmiParser.dll
+D:\WmiParserNet6\WmiParser\obj\Debug\net6.0\WmiParser.csproj.Fody.CopyLocal.cache
+D:\WmiParserNet6\WmiParser\obj\Debug\net6.0\WmiParser.csproj.Fody.RuntimeCopyLocal.cache
