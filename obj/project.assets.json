@@ -23,7 +23,7 @@
           "build/Costura.Fody.targets": {}
         }
       },
-      "CsvHelper/30.0.1": {
+      "CsvHelper/33.0.1": {
         "type": "package",
         "compile": {
           "lib/net6.0/CsvHelper.dll": {
@@ -49,7 +49,7 @@
           }
         }
       },
-      "Fody/6.7.0": {
+      "Fody/6.8.1": {
         "type": "package",
         "build": {
           "build/Fody.targets": {}
@@ -1361,24 +1361,28 @@
         "netstandardweaver/Costura.Fody.xcf"
       ]
     },
-    "CsvHelper/30.0.1": {
-      "sha512": "rcZtgbWR+As4G3Vpgx0AMNmShGuQLFjkHAPIIflzrfkJCx8/AOd4m96ZRmiU1Wi39qS5UVjV0P8qdgqOo5Cwyg==",
+    "CsvHelper/33.0.1": {
+      "sha512": "fev4lynklAU2A9GVMLtwarkwaanjSYB4wUqO2nOJX5hnzObORzUqVLe+bDYCUyIIRQM4o5Bsq3CcyJR89iMmEQ==",
       "type": "package",
-      "path": "csvhelper/30.0.1",
+      "path": "csvhelper/33.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
-        "csvhelper.30.0.1.nupkg.sha512",
+        "csvhelper.33.0.1.nupkg.sha512",
         "csvhelper.nuspec",
-        "lib/net45/CsvHelper.dll",
-        "lib/net45/CsvHelper.xml",
+        "lib/net462/CsvHelper.dll",
+        "lib/net462/CsvHelper.xml",
         "lib/net47/CsvHelper.dll",
         "lib/net47/CsvHelper.xml",
-        "lib/net5.0/CsvHelper.dll",
-        "lib/net5.0/CsvHelper.xml",
+        "lib/net48/CsvHelper.dll",
+        "lib/net48/CsvHelper.xml",
         "lib/net6.0/CsvHelper.dll",
         "lib/net6.0/CsvHelper.xml",
+        "lib/net7.0/CsvHelper.dll",
+        "lib/net7.0/CsvHelper.xml",
+        "lib/net8.0/CsvHelper.dll",
+        "lib/net8.0/CsvHelper.xml",
         "lib/netstandard2.0/CsvHelper.dll",
         "lib/netstandard2.0/CsvHelper.xml",
         "lib/netstandard2.1/CsvHelper.dll",
@@ -1402,16 +1406,16 @@
         "lib/net35/FluentCommandLineParser.xml"
       ]
     },
-    "Fody/6.7.0": {
-      "sha512": "apsA8Hp9sAuOVmn9byPnCuqiQEjhAApqwNfEG+Gu0OyHUZfjHhLwvNQnAaONDdHWDXP/pBgpGXuscVwfEym8zQ==",
+    "Fody/6.8.1": {
+      "sha512": "pwk2/No1kL1ft+zMT2y0MvzB6W5cpkdOTj+0+T2u7LGJMTw37qtlnHzCSCyvwRiZVoJ/V/DE78eQ/WEcutUVDw==",
       "type": "package",
-      "path": "fody/6.7.0",
+      "path": "fody/6.8.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "License.txt",
         "build/Fody.targets",
-        "fody.6.7.0.nupkg.sha512",
+        "fody.6.8.1.nupkg.sha512",
         "fody.nuspec",
         "netclassictask/Fody.dll",
         "netclassictask/FodyCommon.dll",
@@ -1432,7 +1436,8 @@
         "netstandardtask/Mono.Cecil.Rocks.dll",
         "netstandardtask/Mono.Cecil.Rocks.pdb",
         "netstandardtask/Mono.Cecil.dll",
-        "netstandardtask/Mono.Cecil.pdb"
+        "netstandardtask/Mono.Cecil.pdb",
+        "readme.md"
       ]
     },
     "Microsoft.NETCore.Platforms/1.1.0": {
@@ -4708,25 +4713,30 @@
   "projectFileDependencyGroups": {
     "net6.0": [
       "Costura.Fody >= 5.7.0",
-      "CsvHelper >= 30.0.1",
+      "CsvHelper >= 33.0.1",
       "FluentCommandLineParser >= 1.4.3",
-      "Fody >= 6.7.0"
+      "Fody >= 6.8.1"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\CFUser\\.nuget\\packages\\": {}
+    "C:\\Users\\Andrew Rathbun\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\WmiParserNet6\\WmiParser\\Wmi-Parser.csproj",
+      "projectUniqueName": "Z:\\GitHub\\Forks\\WMI-Parser\\Wmi-Parser.csproj",
       "projectName": "Wmi-Parser",
-      "projectPath": "D:\\WmiParserNet6\\WmiParser\\Wmi-Parser.csproj",
-      "packagesPath": "C:\\Users\\CFUser\\.nuget\\packages\\",
-      "outputPath": "D:\\WmiParserNet6\\WmiParser\\obj\\",
+      "projectPath": "Z:\\GitHub\\Forks\\WMI-Parser\\Wmi-Parser.csproj",
+      "packagesPath": "C:\\Users\\Andrew Rathbun\\.nuget\\packages\\",
+      "outputPath": "Z:\\GitHub\\Forks\\WMI-Parser\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\CFUser\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Andrew Rathbun\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4746,6 +4756,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -4760,7 +4775,7 @@
           },
           "CsvHelper": {
             "target": "Package",
-            "version": "[30.0.1, )"
+            "version": "[33.0.1, )"
           },
           "FluentCommandLineParser": {
             "target": "Package",
@@ -4770,7 +4785,7 @@
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
             "suppressParent": "All",
             "target": "Package",
-            "version": "[6.7.0, )"
+            "version": "[6.8.1, )"
           }
         },
         "imports": [
@@ -4789,7 +4804,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401\\RuntimeIdentifierGraph.json"
       }
     }
   },
